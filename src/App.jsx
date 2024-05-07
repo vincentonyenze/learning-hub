@@ -1,4 +1,6 @@
 import SiteHeader from "./components/SiteHeader.jsx";
+import { getCourses, getInstructor } from "./data/catalog.js";
+import { COVER_SIZE, courseCover, heroImage, instructorPhoto, PORTRAIT_SIZE } from "./data/media.js";
 
 // The frame every page will sit in. In Step 5 this becomes the router's
 // root layout, and the <main> content becomes whichever page you're on.
@@ -17,32 +19,33 @@ function App() {
       <main id="main" className="main container" tabIndex="-1">
         <div className="page-header">
           <h1 className="page-title">Learn something new today</h1>
-          <p className="page-lead">
-            A temporary page to check the design: colours, type and buttons, in light and dark mode.
-          </p>
+          <p className="page-lead">A temporary page to check the photos. The real pages start in Step 5.</p>
         </div>
 
-        <div className="card" style={{ padding: "1.5rem", display: "grid", gap: "1rem", maxWidth: "36rem" }}>
-          <p>
-            <span className="tag tag--primary">Beginner</span> <span className="tag tag--accent">New</span>{" "}
-            <span className="tag">6 hours</span>
-          </p>
-          <p>
-            Cards, tags and buttons will be reused all over the site, so they're shared styles in{" "}
-            <code>index.css</code>.
-          </p>
-          <p style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-            <button type="button" className="button button--primary">
-              Primary
-            </button>
-            <button type="button" className="button button--secondary">
-              Secondary
-            </button>
-            <button type="button" className="button button--ghost">
-              Ghost
-            </button>
-          </p>
-        </div>
+        <img src={heroImage} alt="" width="1600" height="900" style={{ borderRadius: "var(--radius)", marginBottom: "1.5rem" }} />
+
+        <ul style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(16rem, 1fr))", gap: "1rem", padding: 0, listStyle: "none" }}>
+          {getCourses().map((course) => {
+            const instructor = getInstructor(course.instructorId);
+            return (
+              <li key={course.id} className="card" style={{ overflow: "hidden" }}>
+                <img src={courseCover(course.id)} alt="" {...COVER_SIZE} />
+                <div style={{ padding: "1rem", display: "grid", gap: "0.5rem" }}>
+                  <strong>{course.title}</strong>
+                  <span style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--color-muted)" }}>
+                    <img
+                      src={instructorPhoto(instructor.id)}
+                      alt=""
+                      {...PORTRAIT_SIZE}
+                      style={{ width: "2rem", height: "2rem", borderRadius: "50%" }}
+                    />
+                    {instructor.name}
+                  </span>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
       </main>
 
       <footer className="footer">
