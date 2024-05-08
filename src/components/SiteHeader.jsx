@@ -1,34 +1,35 @@
+import { Link } from "react-router";
 import "./SiteHeader.css";
 
-// The bar across the top of every page. Plain links for now: Step 5 turns
-// them into router links, and Step 6 marks the current page.
+// The bar across the top of every page. Router links: clicking one changes
+// the page without reloading. (Step 6 marks the current page.)
 function SiteHeader() {
   return (
     <header className="site-header">
       <div className="container site-header__inner">
-        <a href="/" className="site-header__brand">
+        <Link to="/" className="site-header__brand">
           <img className="site-header__logo" src="/favicon.svg" alt="" width="32" height="32" />
           Learning Hub
-        </a>
+        </Link>
 
         <nav className="site-header__nav" aria-label="Main">
           <ul className="site-header__links">
             <li>
-              <a href="/courses" className="site-header__link">
+              <Link to="/courses" className="site-header__link">
                 Courses
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/dashboard" className="site-header__link">
+              <Link to="/dashboard" className="site-header__link">
                 My learning
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
 
-        <a href="/sign-in" className="button button--primary">
+        <Link to="/sign-in" className="button button--primary">
           Sign in
-        </a>
+        </Link>
       </div>
     </header>
   );
