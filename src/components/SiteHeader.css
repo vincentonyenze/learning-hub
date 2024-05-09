@@ -60,3 +60,62 @@
   background: var(--color-primary-soft);
   color: var(--color-primary);
 }
+
+/* The links and Sign in, side by side on wide screens */
+.site-header__menu {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* The Menu button: only needed on narrow screens */
+.site-header__toggle {
+  display: none;
+  align-items: center;
+  gap: 0.45rem;
+  margin-left: auto;
+  padding: 0.5rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  font-weight: 650;
+}
+
+.site-header__toggle[aria-expanded="true"] {
+  border-color: var(--color-primary);
+}
+
+/* ===== Narrow screens: the menu becomes a panel under the header ===== */
+@media (max-width: 720px) {
+  .site-header__toggle {
+    display: inline-flex;
+  }
+
+  .site-header__menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 0.75rem var(--gutter) 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+    box-shadow: var(--shadow);
+  }
+
+  /* Closed: removed completely, so its links can't be reached with Tab */
+  .site-header__menu[data-open="false"] {
+    display: none;
+  }
+
+  .site-header__links {
+    flex-direction: column;
+  }
+
+  .site-header__link {
+    padding: 0.75rem 0.85rem; /* bigger targets for fingers */
+  }
+}
