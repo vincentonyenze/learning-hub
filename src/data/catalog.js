@@ -46,3 +46,13 @@ export function formatDuration(minutes) {
   if (!hours) return `${rest}m`;
   return rest ? `${hours}h ${rest}m` : `${hours}h`;
 }
+
+// The best-rated courses, for the home page
+export function getFeaturedCourses(count = 3) {
+  return courses.toSorted((a, b) => b.rating - a.rating).slice(0, count);
+}
+
+// 18320 -> "18,320"
+export function formatNumber(value) {
+  return value.toLocaleString("en-US");
+}
