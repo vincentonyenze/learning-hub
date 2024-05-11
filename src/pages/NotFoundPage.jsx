@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router";
+import EmptyState from "../components/EmptyState.jsx";
 
 // Any address that no route matches: a mistyped link, or an old bookmark.
 // It still sits inside the root layout, so the header is there to help.
@@ -7,23 +8,26 @@ function NotFoundPage() {
   const { pathname } = useLocation();
 
   return (
-    <div className="page-header">
-      <p className="tag tag--accent">404</p>
-      <h1 className="page-title" style={{ marginTop: "0.75rem" }}>
-        Page not found
-      </h1>
-      <p className="page-lead">
+    <EmptyState
+      icon="404"
+      title="Page not found"
+      // It IS the page, so its title is the page's h1
+      headingLevel={1}
+      actions={
+        <>
+          <Link to="/" className="button button--primary">
+            Go to the home page
+          </Link>
+          <Link to="/courses" className="button button--secondary">
+            Browse courses
+          </Link>
+        </>
+      }
+    >
+      <p>
         There's nothing at <code>{pathname}</code>. The link may be mistyped, or the page may have moved.
       </p>
-      <p style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginTop: "1.25rem" }}>
-        <Link to="/" className="button button--primary">
-          Go to the home page
-        </Link>
-        <Link to="/courses" className="button button--secondary">
-          Browse courses
-        </Link>
-      </p>
-    </div>
+    </EmptyState>
   );
 }
 

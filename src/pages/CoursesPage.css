@@ -1,0 +1,59 @@
+/* Sidebar beside the results on wide screens, above them on narrow ones */
+.catalogue {
+  display: grid;
+  grid-template-columns: 15rem 1fr;
+  align-items: start;
+  gap: clamp(1.25rem, 3vw, 2rem);
+}
+
+.catalogue__sidebar {
+  position: sticky; /* stays in view while the results scroll */
+  top: calc(var(--header-height) + 1.5rem);
+  padding: 1.25rem;
+}
+
+.catalogue__stats {
+  display: grid;
+  gap: 1rem;
+}
+
+.catalogue__stats dt {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.catalogue__stats dd {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: 750;
+}
+
+.catalogue__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.catalogue__count {
+  color: var(--color-muted);
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+@media (max-width: 820px) {
+  .catalogue {
+    grid-template-columns: 1fr;
+  }
+
+  .catalogue__sidebar {
+    position: static;
+  }
+
+  /* The three numbers side by side, as a compact strip */
+  .catalogue__stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
