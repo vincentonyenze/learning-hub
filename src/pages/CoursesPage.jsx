@@ -1,18 +1,66 @@
-import { Link } from "react-router";
+import { useRef } from "react";
+import { useSearchParams } from "react-router";
 import CourseCard from "../components/CourseCard.jsx";
+import CourseFilters from "../components/CourseFilters.jsx";
 import EmptyState from "../components/EmptyState.jsx";
-import { courseMinutes, formatDuration, getCourses, getLessons } from "../data/catalog.js";
+import { DEFAULT_FILTERS, filterCourses, getCourses, readFilters, SORT_OPTIONS } from "../data/catalog.js";
 import "./CoursesPage.css";
 
-// "/courses": the whole catalogue.
+// "/courses": the whole catalogue, searchable and filterable.
 //
-// Laid out as a sidebar (filters, from Step 9) beside the results. For now
-// the sidebar sums up what's on offer.
+// THE ADDRESS IS THE STATE. The filters aren't kept in useState: they live
+// in the URL (/courses?category=Design&sort=rating), read with
+// useSearchParams. So a filtered view can be bookmarked, shared, refreshed,
+// and Back goes to the previous filters, all without extra code.
 function CoursesPage() {
-  const courses = getCourses();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchInput = useRef(null);
 
-  const totalLessons = courses.reduce((total, course) => total + getLessons(course).length, 0);
-  const totalMinutes = courses.reduce((total, course) => total + courseMinutes(course), 0);
+  // Address -> filters (unknown values fall back to the defaults)
+  const filters = readFilters(searchParams);
+
+  // Derived on every render, never stored
+  const allCourses = getCourses();
+  const courses = filterCourses(allCourses, filters);
+  const counts = Object.groupBy(allCourses, (course) => course.category);
+  const subjectCounts = Object.fromEntries(Object.entries(counts).map(([name, list]) => [name, list.length]));
+  const isFiltered = filters.q !== "" || filters.category !== "" || filters.level !== "";
+
+  // Write changes into the address. Defaults are left out, so the address
+  // stays short: plain /courses means "everything, most popular first".
+  //   replace: true -> change the current history entry instead of adding
+  //   one. Used while typing, or Back would undo the search one letter
+  //   at a time.
+  //   flushSync: true -> update the page straight away. Navigations
+  //   normally run as a TRANSITION (low priority, may wait). Controlled
+  //   form fields can't wait: React would redraw them with the OLD value
+  //   between key presses. Typing "access" left just "s", and pressing
+  //   Down three times in Sort by only moved one place. So every change
+  //   from these fields is applied immediately.
+  function updateFilters(changes, { replace = false } = {}) {
+    setSearchParams(
+      (current) => {
+        const next = new URLSearchParams(current);
+        for (const [name, value] of Object.entries(changes)) {
+          if (value === "" || value === DEFAULT_FILTERS[name]) next.delete(name);
+          else next.set(name, value);
+        }
+        return next;
+      },
+      { replace, flushSync: true }
+    );
+  }
+
+  function clearFilters() {
+    // Keep the sort order: it isn't a filter, it's how you like to browse
+    updateFilters({ q: "", category: "", level: "" });
+    // Both Clear buttons vanish once there's nothing to clear, which would
+    // drop keyboard focus to the top of the page. Continue from the search
+    // box instead. (flushSync above means the page has already updated.)
+    searchInput.current.focus();
+  }
+
+  const countText = `${courses.length} ${courses.length === 1 ? "course" : "courses"}`;
 
   return (
     <>
@@ -24,48 +72,75 @@ function CoursesPage() {
       </div>
 
       <div className="catalogue">
-        <aside className="catalogue__sidebar card" aria-label="Catalogue summary">
-          <dl className="catalogue__stats">
-            <div>
-              <dt>Courses</dt>
-              <dd>{courses.length}</dd>
-            </div>
-            <div>
-              <dt>Lessons</dt>
-              <dd>{totalLessons}</dd>
-            </div>
-            <div>
-              <dt>Hours of learning</dt>
-              <dd>{formatDuration(totalMinutes)}</dd>
-            </div>
-          </dl>
+        <aside className="catalogue__sidebar card" aria-label="Filters">
+          <CourseFilters
+            filters={filters}
+            counts={subjectCounts}
+            searchRef={searchInput}
+            onChange={updateFilters}
+            onSearch={(q) => updateFilters({ q }, { replace: true })}
+          />
+          {isFiltered && (
+            <button type="button" className="button button--secondary catalogue__clear" onClick={clearFilters}>
+              Clear filters
+            </button>
+          )}
         </aside>
 
         <section className="catalogue__results" aria-labelledby="results-title">
           <div className="catalogue__bar">
-            {/* A heading screen reader users can jump to, read as "6 courses" */}
             <h2 id="results-title" className="catalogue__count">
-              {courses.length} {courses.length === 1 ? "course" : "courses"}
+              {isFiltered ? `${countText} found` : countText}
             </h2>
+            <div className="catalogue__sort">
+              <label htmlFor="sort">Sort by</label>
+              <select
+                id="sort"
+                className="catalogue__select"
+                value={filters.sort}
+                onChange={(event) => updateFilters({ sort: event.target.value })}
+              >
+                {SORT_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
+
+          {/* Read out after every change, so screen reader users hear what
+              their filters did without hunting for it */}
+          <p className="visually-hidden" role="status">
+            {countText} {isFiltered ? "match your filters" : "in the catalogue"}
+          </p>
 
           {courses.length === 0 ? (
             <EmptyState
               icon="🔍"
-              title="No courses yet"
+              title="No courses match"
               actions={
-                <Link to="/" className="button button--secondary">
-                  Back to the home page
-                </Link>
+                <button type="button" className="button button--primary" onClick={clearFilters}>
+                  Clear filters
+                </button>
               }
             >
-              <p>New courses are on the way. Check back soon.</p>
+              <p>
+                {filters.q ? (
+                  <>
+                    Nothing matches “{filters.q}”
+                    {filters.category || filters.level ? " with these filters" : ""}.
+                  </>
+                ) : (
+                  "No courses fit this combination."
+                )}{" "}
+                Try fewer words, or another subject or level.
+              </p>
             </EmptyState>
           ) : (
             <ul className="course-grid">
               {courses.map((course) => (
                 <li key={course.id}>
-                  {/* h3: under the "6 courses" h2 */}
                   <CourseCard course={course} headingLevel={3} />
                 </li>
               ))}

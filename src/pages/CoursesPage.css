@@ -12,20 +12,9 @@
   padding: 1.25rem;
 }
 
-.catalogue__stats {
-  display: grid;
-  gap: 1rem;
-}
-
-.catalogue__stats dt {
-  color: var(--color-muted);
-  font-size: var(--text-sm);
-}
-
-.catalogue__stats dd {
-  margin: 0;
-  font-size: var(--text-xl);
-  font-weight: 750;
+.catalogue__clear {
+  width: 100%;
+  margin-top: 1.25rem;
 }
 
 .catalogue__bar {
@@ -51,9 +40,21 @@
   .catalogue__sidebar {
     position: static;
   }
+}
 
-  /* The three numbers side by side, as a compact strip */
-  .catalogue__stats {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.catalogue__sort {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.catalogue__select {
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text);
 }
