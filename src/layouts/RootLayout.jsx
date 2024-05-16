@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet, ScrollRestoration } from "react-router";
 import SiteHeader from "../components/SiteHeader.jsx";
 
 // The frame around EVERY page: skip link, header, footer. Only the part in
@@ -22,6 +22,16 @@ function RootLayout() {
       <main id="main" className="main container" tabIndex="-1">
         <Outlet />
       </main>
+
+      {/* A normal website starts each new page at the top; a single-page
+          app doesn't, because the browser never loads a new page. This
+          scrolls to the top on every new page, and back to where you were
+          when you press Back.
+          It remembers positions by location.key, but every page you open
+          directly (typed, bookmarked, refreshed) gets the same key,
+          "default", so two such pages would share one position. Adding the
+          path keeps them apart. */}
+      <ScrollRestoration getKey={(location) => `${location.key}:${location.pathname}`} />
 
       <footer className="footer">
         <div className="container">

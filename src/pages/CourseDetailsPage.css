@@ -1,0 +1,211 @@
+/* ===== Top of the page: text beside the cover photo ===== */
+.course-hero {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+
+.course-hero__text {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.course-hero__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.course-hero .page-lead {
+  margin-top: 0;
+}
+
+.course-hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.25rem;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.course-hero__star {
+  color: var(--color-accent);
+}
+
+.course-hero__instructor {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.course-hero__instructor img {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+}
+
+.course-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.course-hero__cover {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  object-fit: cover;
+  box-shadow: var(--shadow);
+}
+
+/* ===== Main text beside the facts box ===== */
+.course-body {
+  display: grid;
+  grid-template-columns: 1fr 17rem;
+  align-items: start;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.course-body__main {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 2.5rem);
+  min-width: 0;
+}
+
+.course-body__aside {
+  position: sticky;
+  top: calc(var(--header-height) + 1.5rem);
+  padding: 1.25rem;
+}
+
+.course-section__title {
+  margin-bottom: 0.85rem;
+  font-size: var(--text-xl);
+}
+
+.course-section p {
+  max-width: 65ch;
+}
+
+/* "What you'll learn": a ticked list in two columns */
+.course-learn {
+  padding: 1.25rem 1.4rem;
+}
+
+.course-learn__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+  gap: 0.6rem 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.course-learn__list li {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.course-learn__list li::before {
+  content: "✓";
+  color: var(--color-success);
+  font-weight: 800;
+}
+
+/* Temporary curriculum outline (Step 11 replaces it) */
+.curriculum-outline {
+  display: grid;
+  gap: 1rem;
+  padding-left: 1.25rem;
+}
+
+.curriculum-outline h3 {
+  font-size: 1rem;
+}
+
+.curriculum-outline__time {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+/* Instructor */
+.instructor {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.instructor__photo {
+  flex-shrink: 0;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+}
+
+.instructor__name {
+  font-size: var(--text-lg);
+  font-weight: 750;
+}
+
+.instructor__role {
+  margin-bottom: 0.4rem;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+/* Facts box */
+.course-includes {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.course-includes div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.course-includes div:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.course-includes dt {
+  color: var(--color-muted);
+}
+
+.course-includes dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.course-related {
+  margin-top: clamp(2.5rem, 6vw, 3.5rem);
+}
+
+/* "Taught by" and "See the lessons" jump down the page: leave room for
+   the sticky header so the heading isn't hidden under it */
+#curriculum,
+#instructor {
+  scroll-margin-top: calc(var(--header-height) + 1rem);
+}
+
+@media (max-width: 860px) {
+  .course-hero,
+  .course-body {
+    grid-template-columns: 1fr;
+  }
+
+  .course-hero__cover {
+    order: -1;
+  }
+
+  .course-body__aside {
+    position: static;
+  }
+}

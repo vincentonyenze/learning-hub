@@ -112,3 +112,17 @@ export function filterCourses(allCourses, { q, category, level, sort }) {
     .filter((course) => matchesSearch(course, q))
     .toSorted(COMPARE[sort] ?? COMPARE.popular);
 }
+
+// "2026-10" -> "October 2026"
+export function formatMonth(yearMonth) {
+  const [year, month] = yearMonth.split("-").map(Number);
+  return new Date(year, month - 1).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
+
+// Other courses in the same subject, best rated first
+export function getRelatedCourses(course, count = 3) {
+  return courses
+    .filter((other) => other.id !== course.id && other.category === course.category)
+    .toSorted((a, b) => b.rating - a.rating)
+    .slice(0, count);
+}
