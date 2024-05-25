@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router";
 import Breadcrumbs from "../components/Breadcrumbs.jsx";
 import CourseCard from "../components/CourseCard.jsx";
+import Curriculum from "../components/Curriculum.jsx";
 import EmptyState from "../components/EmptyState.jsx";
 import {
   courseMinutes,
@@ -127,22 +128,7 @@ function CourseDetailsPage() {
             <h2 id="curriculum-title" className="course-section__title">
               Curriculum
             </h2>
-            {/* A plain outline for now: Step 11 turns it into sections you
-                can open and close */}
-            <ol className="curriculum-outline">
-              {course.modules.map((module) => (
-                <li key={module.id}>
-                  <h3>{module.title}</h3>
-                  <ol>
-                    {module.lessons.map((lesson) => (
-                      <li key={lesson.id}>
-                        {lesson.title} <span className="curriculum-outline__time">{lesson.minutes} min</span>
-                      </li>
-                    ))}
-                  </ol>
-                </li>
-              ))}
-            </ol>
+            <Curriculum course={course} />
           </section>
 
           <section id="instructor" className="course-section" aria-labelledby="instructor-title">
