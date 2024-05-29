@@ -1,0 +1,36 @@
+.course-sidebar {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.course-sidebar__module-title {
+  display: grid;
+  margin: 0 0 0.35rem 0.65rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.course-sidebar__module-title span {
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.course-sidebar__lessons {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0;
+  list-style: none;
+}
+
+/* Narrower than the curriculum: a smaller number column, and the time
+   tucked in tighter */
+.course-sidebar .lesson-row {
+  grid-template-columns: 1.3rem 1.3rem 1fr auto;
+  gap: 0.45rem;
+  padding: 0.5rem 0.55rem;
+  font-size: 0.92rem;
+}

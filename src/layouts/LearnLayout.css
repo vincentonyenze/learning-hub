@@ -1,0 +1,90 @@
+/* Lesson list beside the lesson on wide screens */
+.learn {
+  display: grid;
+  grid-template-columns: 19rem 1fr;
+  align-items: start;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.learn__sidebar {
+  position: sticky;
+  top: calc(var(--header-height) + 1rem);
+  /* A long course scrolls inside the sidebar, not off the screen */
+  max-height: calc(100vh - var(--header-height) - 2rem);
+  overflow-y: auto;
+  padding: 1.1rem 0.75rem 1.1rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.learn__eyebrow {
+  margin-left: 0.65rem;
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.learn__course-title {
+  margin-left: 0.65rem;
+  font-size: var(--text-lg);
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.learn__course-title a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.learn__course-title a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.learn__count {
+  margin: 0.15rem 0 1rem 0.65rem;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+/* The phone-only toggle */
+.learn__toggle {
+  display: none;
+}
+
+.learn__content {
+  min-width: 0;
+}
+
+@media (max-width: 860px) {
+  .learn {
+    grid-template-columns: 1fr;
+  }
+
+  .learn__sidebar {
+    position: static;
+    max-height: none;
+    padding: 1rem;
+  }
+
+  .learn__count {
+    margin-bottom: 0.75rem;
+  }
+
+  .learn__toggle {
+    display: inline-flex;
+    width: 100%;
+  }
+
+  /* Closed: removed, so its links can't be reached with Tab */
+  .learn__list[data-open="false"] {
+    display: none;
+  }
+
+  .learn__list {
+    margin-top: 1rem;
+  }
+}

@@ -1,8 +1,10 @@
 import { createBrowserRouter } from "react-router";
+import LearnLayout from "./layouts/LearnLayout.jsx";
 import RootLayout from "./layouts/RootLayout.jsx";
 import CourseDetailsPage from "./pages/CourseDetailsPage.jsx";
 import CoursesPage from "./pages/CoursesPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
+import LessonPage from "./pages/LessonPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 
 // Every page of the site, as a tree of routes.
@@ -11,13 +13,16 @@ import NotFoundPage from "./pages/NotFoundPage.jsx";
 // appear inside the layout's <Outlet />:
 //   - index: true   -> the page for "/" itself
 //   - "courses"     -> "/courses" (child paths are relative: no leading /)
-//   - "courses/:courseId" -> any one course. ":courseId" is a PARAMETER:
-//                      it matches any value, and the page reads it with
-//                      useParams(). One route, every course.
+//   - "courses/:courseId" -> one course. ":courseId" is a PARAMETER: it
+//                      matches any value, read with useParams(). Its own
+//                      children (NESTED routes):
+//         - index        -> the course page
+//         - "lessons"    -> LearnLayout (the lesson list), whose child
+//             - ":lessonId" -> one lesson, in LearnLayout's <Outlet>
 //   - "*"           -> anything else: the 404 page
 //
-// More routes join this tree in the steps to come: lessons nested inside
-// a course, sign-in, and the dashboard.
+// Nesting routes nests layouts: RootLayout > LearnLayout > LessonPage.
+// More routes join this tree later: sign-in, and the dashboard.
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -25,7 +30,18 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "courses", element: <CoursesPage /> },
-      { path: "courses/:courseId", element: <CourseDetailsPage /> },
+      {
+        // No element of its own: it just groups everything under one course
+        path: "courses/:courseId",
+        children: [
+          { index: true, element: <CourseDetailsPage /> },
+          {
+            path: "lessons",
+            element: <LearnLayout />,
+            children: [{ path: ":lessonId", element: <LessonPage /> }],
+          },
+        ],
+      },
       { path: "*", element: <NotFoundPage /> },
     ],
   },
