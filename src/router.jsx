@@ -4,7 +4,7 @@ import RootLayout from "./layouts/RootLayout.jsx";
 import CourseDetailsPage from "./pages/CourseDetailsPage.jsx";
 import CoursesPage from "./pages/CoursesPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
-import LessonPage from "./pages/LessonPage.jsx";
+import LessonPage, { FirstLessonRedirect } from "./pages/LessonPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 
 // Every page of the site, as a tree of routes.
@@ -17,7 +17,8 @@ import NotFoundPage from "./pages/NotFoundPage.jsx";
 //                      matches any value, read with useParams(). Its own
 //                      children (NESTED routes):
 //         - index        -> the course page
-//         - "lessons"    -> LearnLayout (the lesson list), whose child
+//         - "lessons"    -> LearnLayout (the lesson list), whose children
+//             - index       -> /lessons alone: redirect to the first lesson
 //             - ":lessonId" -> one lesson, in LearnLayout's <Outlet>
 //   - "*"           -> anything else: the 404 page
 //
@@ -38,7 +39,10 @@ export const router = createBrowserRouter([
           {
             path: "lessons",
             element: <LearnLayout />,
-            children: [{ path: ":lessonId", element: <LessonPage /> }],
+            children: [
+              { index: true, element: <FirstLessonRedirect /> },
+              { path: ":lessonId", element: <LessonPage /> },
+            ],
           },
         ],
       },
