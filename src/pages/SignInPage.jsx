@@ -1,0 +1,135 @@
+import { useRef, useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { useAuth } from "../auth/authContext.js";
+import TextField from "../components/TextField.jsx";
+import { validateSignIn } from "../utils/validation.js";
+import "./SignInPage.css";
+
+const FIELD_LABELS = { name: "Your name", email: "Email address" };
+
+// "/sign-in": a PRETEND sign-in (no server yet): your name and email,
+// remembered in this browser.
+function SignInPage() {
+  const { user, signIn } = useAuth();
+  const navigate = useNavigate();
+
+  const [values, setValues] = useState({ name: "", email: "" });
+  const [errors, setErrors] = useState({});
+  // Errors only appear once you've tried to submit. Nobody wants "Enter
+  // your email" shouting at them before they've started typing.
+  const [triedToSubmit, setTriedToSubmit] = useState(false);
+  const summaryRef = useRef(null);
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    const next = { ...values, [name]: value };
+    setValues(next);
+    // After a failed attempt, re-check as you type, so a fixed field's
+    // error disappears straight away
+    if (triedToSubmit) setErrors(validateSignIn(next));
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault(); // a form would otherwise reload the page
+    const found = validateSignIn(values);
+    setErrors(found);
+    setTriedToSubmit(true);
+
+    if (Object.keys(found).length > 0) {
+      // Move focus to the summary, so keyboard and screen reader users
+      // land on the list of problems instead of on a button that "did
+      // nothing". (requestAnimationFrame: the summary appears on the next
+      // render, so wait for it to be on the page.)
+      requestAnimationFrame(() => summaryRef.current?.focus());
+      return;
+    }
+
+    signIn(values);
+    navigate("/");
+  }
+
+  if (user) {
+    return (
+      <div className="sign-in card">
+        <h1 className="sign-in__title">You're signed in</h1>
+        <p>
+          You're signed in as <strong>{user.name}</strong> ({user.email}).
+        </p>
+        <p className="sign-in__actions">
+          <Link to="/courses" className="button button--primary">
+            Browse courses
+          </Link>
+        </p>
+      </div>
+    );
+  }
+
+  const errorList = Object.entries(errors);
+
+  return (
+    <div className="sign-in card">
+      <h1 className="sign-in__title">Sign in</h1>
+      <p className="sign-in__lead">Sign in to save your progress and pick up where you left off.</p>
+
+      {/* The error summary: every problem in one place, each a link that
+          jumps to its field. tabIndex -1 lets the code move focus here. */}
+      {errorList.length > 0 && (
+        <div ref={summaryRef} className="error-summary" role="alert" tabIndex={-1} aria-labelledby="error-summary-title">
+          <h2 id="error-summary-title" className="error-summary__title">
+            There {errorList.length === 1 ? "is a problem" : `are ${errorList.length} problems`}
+          </h2>
+          <ul>
+            {errorList.map(([field, message]) => (
+              <li key={field}>
+                <a
+                  href={`#${field}`}
+                  onClick={(event) => {
+                    // The link's job is to put you IN the field
+                    event.preventDefault();
+                    document.querySelector(`[name="${field}"]`)?.focus();
+                  }}
+                >
+                  {FIELD_LABELS[field]}: {message}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* noValidate: we show our own, clearer messages instead of the
+          browser's pop-up bubbles */}
+      <form className="sign-in__form" onSubmit={handleSubmit} noValidate>
+        <TextField
+          label={FIELD_LABELS.name}
+          name="name"
+          autoComplete="name"
+          value={values.name}
+          onChange={handleChange}
+          error={errors.name}
+        />
+        <TextField
+          label={FIELD_LABELS.email}
+          hint="We'll only use it to show who's signed in."
+          name="email"
+          type="email"
+          autoComplete="email"
+          spellCheck={false}
+          value={values.email}
+          onChange={handleChange}
+          error={errors.email}
+        />
+        <button type="submit" className="button button--primary sign-in__submit">
+          Sign in
+        </button>
+      </form>
+
+      <p className="sign-in__note">
+        <strong>This is a practice project.</strong> There's no password and no server: your name is only kept in this
+        browser. Real accounts come later, with a backend.
+      </p>
+    </div>
+  );
+}
+
+export default SignInPage;

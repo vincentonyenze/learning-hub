@@ -8,12 +8,17 @@ import "./index.css";
 // React Router 8: RouterProvider comes from "react-router/dom" (it uses the
 // browser's DOM); everything else comes from "react-router"
 import { RouterProvider } from "react-router/dom";
+import AuthProvider from "./auth/AuthProvider.jsx";
 import { router } from "./router.jsx";
 
 // The router decides which page to show from the address bar, so it's the
 // top of the app: there's no <App /> any more
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    {/* Around everything, so every page (and the header) can ask who's
+        signed in with useAuth() */}
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );

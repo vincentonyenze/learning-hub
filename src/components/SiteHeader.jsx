@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router";
+import { useAuth } from "../auth/authContext.js";
 import "./SiteHeader.css";
 
 const LINKS = [
@@ -14,6 +15,8 @@ const LINKS = [
 function SiteHeader() {
   const location = useLocation();
   const toggleRef = useRef(null);
+  // Who's signed in, straight from AuthContext: nobody had to pass it here
+  const { user } = useAuth();
 
   // Which page the menu was opened on, or null when it's closed. The menu
   // counts as open only while you're still on THAT page: follow a link and
@@ -75,9 +78,22 @@ function SiteHeader() {
             </ul>
           </nav>
 
-          <Link to="/sign-in" className="button button--primary site-header__sign-in">
-            Sign in
-          </Link>
+          {user ? (
+            // Step 15 turns this into a menu with "Sign out"
+            <p className="site-header__user">
+              <span className="site-header__avatar" aria-hidden="true">
+                {user.name.charAt(0).toUpperCase()}
+              </span>
+              <span>
+                <span className="visually-hidden">Signed in as </span>
+                {user.name}
+              </span>
+            </p>
+          ) : (
+            <Link to="/sign-in" className="button button--primary site-header__sign-in">
+              Sign in
+            </Link>
+          )}
         </div>
       </div>
     </header>

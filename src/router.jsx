@@ -6,6 +6,7 @@ import CoursesPage from "./pages/CoursesPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LessonPage, { FirstLessonRedirect } from "./pages/LessonPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
+import SignInPage from "./pages/SignInPage.jsx";
 
 // Every page of the site, as a tree of routes.
 //
@@ -23,7 +24,8 @@ import NotFoundPage from "./pages/NotFoundPage.jsx";
 //   - "*"           -> anything else: the 404 page
 //
 // Nesting routes nests layouts: RootLayout > LearnLayout > LessonPage.
-// More routes join this tree later: sign-in, and the dashboard.
+//   - "sign-in"     -> the (pretend) sign-in page
+// The dashboard joins this tree later.
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -46,6 +48,7 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      { path: "sign-in", element: <SignInPage /> },
       { path: "*", element: <NotFoundPage /> },
     ],
   },
