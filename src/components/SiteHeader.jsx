@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router";
 import { useAuth } from "../auth/authContext.js";
+import UserMenu from "./UserMenu.jsx";
 import "./SiteHeader.css";
 
 const LINKS = [
@@ -79,18 +80,10 @@ function SiteHeader() {
           </nav>
 
           {user ? (
-            // Step 15 turns this into a menu with "Sign out"
-            <p className="site-header__user">
-              <span className="site-header__avatar" aria-hidden="true">
-                {user.name.charAt(0).toUpperCase()}
-              </span>
-              <span>
-                <span className="visually-hidden">Signed in as </span>
-                {user.name}
-              </span>
-            </p>
+            <UserMenu />
           ) : (
-            <Link to="/sign-in" className="button button--primary site-header__sign-in">
+            // state.from: after signing in, come back to the page you were on
+            <Link to="/sign-in" state={{ from: location }} className="button button--primary site-header__sign-in">
               Sign in
             </Link>
           )}

@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router";
+import RequireAuth from "./auth/RequireAuth.jsx";
 import LearnLayout from "./layouts/LearnLayout.jsx";
 import RootLayout from "./layouts/RootLayout.jsx";
 import CourseDetailsPage from "./pages/CourseDetailsPage.jsx";
@@ -18,7 +19,7 @@ import SignInPage from "./pages/SignInPage.jsx";
 //                      matches any value, read with useParams(). Its own
 //                      children (NESTED routes):
 //         - index        -> the course page
-//         - "lessons"    -> LearnLayout (the lesson list), whose children
+//         - "lessons"    -> (signed in only) LearnLayout, whose children
 //             - index       -> /lessons alone: redirect to the first lesson
 //             - ":lessonId" -> one lesson, in LearnLayout's <Outlet>
 //   - "*"           -> anything else: the 404 page
@@ -39,11 +40,18 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <CourseDetailsPage /> },
           {
-            path: "lessons",
-            element: <LearnLayout />,
+            // A "layout route" with no path: it adds a check, not a
+            // piece of the address. Everything inside needs sign-in.
+            element: <RequireAuth />,
             children: [
-              { index: true, element: <FirstLessonRedirect /> },
-              { path: ":lessonId", element: <LessonPage /> },
+              {
+                path: "lessons",
+                element: <LearnLayout />,
+                children: [
+                  { index: true, element: <FirstLessonRedirect /> },
+                  { path: ":lessonId", element: <LessonPage /> },
+                ],
+              },
             ],
           },
         ],

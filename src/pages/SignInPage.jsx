@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useAuth } from "../auth/authContext.js";
+import { afterSignInPath } from "../auth/redirect.js";
 import TextField from "../components/TextField.jsx";
 import { validateSignIn } from "../utils/validation.js";
 import "./SignInPage.css";
@@ -12,6 +13,11 @@ const FIELD_LABELS = { name: "Your name", email: "Email address" };
 function SignInPage() {
   const { user, signIn } = useAuth();
   const navigate = useNavigate();
+  // Where you were going before being sent here (RequireAuth or the
+  // header's Sign in link put it in the navigation's state)
+  const location = useLocation();
+  const from = location.state?.from;
+  const wasRedirected = location.state?.reason === "protected";
 
   const [values, setValues] = useState({ name: "", email: "" });
   const [errors, setErrors] = useState({});
@@ -45,7 +51,9 @@ function SignInPage() {
     }
 
     signIn(values);
-    navigate("/");
+    // Back to where you were going. replace: the sign-in page leaves
+    // history, so Back doesn't return you to a form you've finished.
+    navigate(afterSignInPath(from), { replace: true });
   }
 
   if (user) {
@@ -69,7 +77,15 @@ function SignInPage() {
   return (
     <div className="sign-in card">
       <h1 className="sign-in__title">Sign in</h1>
-      <p className="sign-in__lead">Sign in to save your progress and pick up where you left off.</p>
+      {wasRedirected ? (
+        // role="status": announced, so screen reader users know why
+        // they've landed on a sign-in page instead of the lesson
+        <p className="sign-in__reason" role="status">
+          Please sign in to continue. You'll go straight back to the page you wanted.
+        </p>
+      ) : (
+        <p className="sign-in__lead">Sign in to save your progress and pick up where you left off.</p>
+      )}
 
       {/* The error summary: every problem in one place, each a link that
           jumps to its field. tabIndex -1 lets the code move focus here. */}
