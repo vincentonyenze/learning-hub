@@ -1,0 +1,26 @@
+.enrol {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.enrol__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.enrol__note {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.enrol__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}

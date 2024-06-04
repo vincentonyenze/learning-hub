@@ -46,12 +46,6 @@
   border-radius: 50%;
 }
 
-.course-hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 0.5rem;
-}
 
 .course-hero__cover {
   width: 100%;

@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router";
 import Breadcrumbs from "../components/Breadcrumbs.jsx";
 import CourseCard from "../components/CourseCard.jsx";
 import Curriculum from "../components/Curriculum.jsx";
+import EnrolPanel from "../components/EnrolPanel.jsx";
 import EmptyState from "../components/EmptyState.jsx";
 import {
   courseMinutes,
@@ -90,15 +91,8 @@ function CourseDetailsPage() {
             </span>
           </p>
 
-          <p className="course-hero__actions">
-            {/* The lesson pages arrive in Steps 12 and 13 */}
-            <Link to={`/courses/${course.id}/lessons/${lessons[0].id}`} className="button button--primary">
-              Start the course
-            </Link>
-            <a href="#curriculum" className="button button--secondary">
-              See the lessons
-            </a>
-          </p>
+          {/* Sign in / Enrol / Continue, depending on who's looking */}
+          <EnrolPanel course={course} />
         </div>
 
         <img className="course-hero__cover" src={courseCover(course.id)} alt="" {...COVER_SIZE} />

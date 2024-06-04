@@ -9,16 +9,20 @@ import "./index.css";
 // browser's DOM); everything else comes from "react-router"
 import { RouterProvider } from "react-router/dom";
 import AuthProvider from "./auth/AuthProvider.jsx";
+import ProgressProvider from "./progress/ProgressProvider.jsx";
 import { router } from "./router.jsx";
 
 // The router decides which page to show from the address bar, so it's the
 // top of the app: there's no <App /> any more
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    {/* Around everything, so every page (and the header) can ask who's
-        signed in with useAuth() */}
+    {/* Around everything, so every page can ask who's signed in
+        (useAuth) and how far they've got (useProgress). Progress sits
+        INSIDE auth, because it needs to know whose progress to load. */}
     <AuthProvider>
-      <RouterProvider router={router} />
+      <ProgressProvider>
+        <RouterProvider router={router} />
+      </ProgressProvider>
     </AuthProvider>
   </StrictMode>
 );

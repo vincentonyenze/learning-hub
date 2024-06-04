@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { Link, Navigate, useOutletContext, useParams } from "react-router";
 import EmptyState from "../components/EmptyState.jsx";
 import { findLesson, getLessons } from "../data/catalog.js";
+import { useProgress } from "../progress/progressContext.js";
 import "./LessonPage.css";
 
 const TYPE_LABELS = { reading: "Reading", exercise: "Exercise" };
@@ -13,6 +15,16 @@ function LessonPage() {
   const { lessonId } = useParams();
   const found = findLesson(course, lessonId);
   const lessons = getLessons(course);
+  const { visitLesson } = useProgress();
+
+  // Remember this as "where you were", so the course page can offer
+  // "Continue: <this lesson>". Opening a lesson also enrols you.
+  // Runs when the lesson changes. visitLesson never changes (the provider
+  // made it once with useMemo), so it can't cause a loop.
+  const realLessonId = found?.lesson.id;
+  useEffect(() => {
+    if (realLessonId) visitLesson(course.id, realLessonId);
+  }, [course.id, realLessonId, visitLesson]);
 
   if (!found) {
     return (
