@@ -1,8 +1,12 @@
 import { createBrowserRouter } from "react-router";
 import RequireAuth from "./auth/RequireAuth.jsx";
+import DashboardLayout from "./layouts/DashboardLayout.jsx";
 import LearnLayout from "./layouts/LearnLayout.jsx";
 import RootLayout from "./layouts/RootLayout.jsx";
 import CourseDetailsPage from "./pages/CourseDetailsPage.jsx";
+import MyCoursesPage from "./pages/dashboard/MyCoursesPage.jsx";
+import OverviewPage from "./pages/dashboard/OverviewPage.jsx";
+import SettingsPage from "./pages/dashboard/SettingsPage.jsx";
 import CoursesPage from "./pages/CoursesPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LessonPage, { FirstLessonRedirect } from "./pages/LessonPage.jsx";
@@ -26,7 +30,10 @@ import SignInPage from "./pages/SignInPage.jsx";
 //
 // Nesting routes nests layouts: RootLayout > LearnLayout > LessonPage.
 //   - "sign-in"     -> the (pretend) sign-in page
-// The dashboard joins this tree later.
+//   - "dashboard"   -> (signed in only) DashboardLayout, with children
+//         - index        -> Overview
+//         - "courses"    -> My courses
+//         - "settings"   -> Settings
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -57,6 +64,22 @@ export const router = createBrowserRouter([
         ],
       },
       { path: "sign-in", element: <SignInPage /> },
+      {
+        // The same RequireAuth as the lessons: one line protects a whole
+        // branch of the tree
+        element: <RequireAuth />,
+        children: [
+          {
+            path: "dashboard",
+            element: <DashboardLayout />,
+            children: [
+              { index: true, element: <OverviewPage /> },
+              { path: "courses", element: <MyCoursesPage /> },
+              { path: "settings", element: <SettingsPage /> },
+            ],
+          },
+        ],
+      },
       { path: "*", element: <NotFoundPage /> },
     ],
   },

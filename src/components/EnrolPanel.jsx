@@ -59,8 +59,6 @@ function EnrolPanel({ course }) {
     );
   }
 
-  const started = status.completedCount > 0 || progress[course.id].lastLessonId !== null;
-
   return (
     <div className="enrol">
       {/* role="status": read out when it appears after pressing Enrol */}
@@ -72,7 +70,7 @@ function EnrolPanel({ course }) {
       </p>
       <p className="enrol__actions">
         <Link to={lessonUrl(status.lastLesson)} className="button button--primary">
-          {started ? `Continue: ${status.lastLesson.title}` : "Start the course"}
+          {status.hasStarted ? `Continue: ${status.lastLesson.title}` : "Start the course"}
         </Link>
         <a href="#curriculum" className="button button--secondary">
           See the lessons

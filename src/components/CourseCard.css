@@ -117,3 +117,14 @@
   padding: 0;
   list-style: none;
 }
+
+/* Progress line in a card's footer (dashboard) */
+.my-course__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}

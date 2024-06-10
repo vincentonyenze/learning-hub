@@ -1,0 +1,56 @@
+.dashboard__header {
+  margin-bottom: 1.25rem;
+}
+
+.dashboard__eyebrow {
+  color: var(--color-primary);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.dashboard__greeting {
+  font-size: var(--text-xl);
+  font-weight: 750;
+}
+
+/* Tab-like links along a line */
+.dashboard__nav {
+  margin-bottom: clamp(1.5rem, 4vw, 2rem);
+  border-bottom: 1px solid var(--color-border);
+  /* Phones: scroll sideways rather than wrap, like most tab bars */
+  overflow-x: auto;
+}
+
+.dashboard__nav ul {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.dashboard__link {
+  display: block;
+  padding: 0.7rem 1rem;
+  border-bottom: 3px solid transparent;
+  color: var(--color-muted);
+  font-weight: 650;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.dashboard__link:hover {
+  color: var(--color-text);
+}
+
+/* The current section: styled by the attribute NavLink sets for screen
+   readers, so the two can't disagree */
+.dashboard__link[aria-current="page"] {
+  border-bottom-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.dashboard__title {
+  margin-bottom: 1.25rem;
+  font-size: var(--text-2xl);
+  line-height: 1.15;
+}

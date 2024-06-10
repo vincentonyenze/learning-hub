@@ -107,6 +107,8 @@ export function courseProgress(progress, course) {
     total: lessons.length,
     percent: Math.round((completedCount / lessons.length) * 100),
     isFinished: completedCount === lessons.length,
+    // Opened a lesson or finished one: "Continue" rather than "Start"
+    hasStarted: completedCount > 0 || Boolean(entry?.lastLessonId),
     // Where "Continue" goes: the last lesson you opened, else the first
     lastLesson: lessons.find((lesson) => lesson.id === entry?.lastLessonId) ?? lessons[0],
     // The first lesson you haven't finished, if any
