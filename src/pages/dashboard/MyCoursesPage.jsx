@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import CourseCard from "../../components/CourseCard.jsx";
 import EmptyState from "../../components/EmptyState.jsx";
+import ProgressBar from "../../components/ProgressBar.jsx";
 import { getCourse } from "../../data/catalog.js";
 import { courseProgress } from "../../progress/progress.js";
 import { useProgress } from "../../progress/progressContext.js";
@@ -42,15 +43,21 @@ function MyCoursesPage() {
                   course={course}
                   headingLevel={2}
                   footer={
-                    <p className="my-course__status">
-                      <span>
-                        {status.completedCount} of {status.total} lessons done
-                      </span>
-                      <Link to={`/courses/${course.id}/lessons/${status.lastLesson.id}`}>
-                        {status.hasStarted ? "Continue" : "Start"}
-                        <span className="visually-hidden"> {course.title}</span>
-                      </Link>
-                    </p>
+                    <div className="my-course">
+                      <ProgressBar
+                        done={status.completedCount}
+                        total={status.total}
+                        label={`${course.title} progress`}
+                        size="small"
+                      />
+                      <p className="my-course__status">
+                        {status.isFinished ? <span className="tag tag--accent">Completed</span> : <span />}
+                        <Link to={`/courses/${course.id}/lessons/${status.lastLesson.id}`}>
+                          {status.isFinished ? "Review" : status.hasStarted ? "Continue" : "Start"}
+                          <span className="visually-hidden"> {course.title}</span>
+                        </Link>
+                      </p>
+                    </div>
                   }
                 />
               </li>

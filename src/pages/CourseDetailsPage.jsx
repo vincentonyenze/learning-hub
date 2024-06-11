@@ -15,6 +15,8 @@ import {
   getRelatedCourses,
 } from "../data/catalog.js";
 import { COVER_SIZE, courseCover, instructorPhoto, PORTRAIT_SIZE } from "../data/media.js";
+import { courseProgress } from "../progress/progress.js";
+import { useProgress } from "../progress/progressContext.js";
 import "./CourseDetailsPage.css";
 
 // "/courses/:courseId": one course in full.
@@ -25,6 +27,7 @@ import "./CourseDetailsPage.css";
 function CourseDetailsPage() {
   const { courseId } = useParams();
   const course = getCourse(courseId);
+  const { progress } = useProgress();
 
   // An old or mistyped link: the address matched the route's PATTERN, but
   // there's no such course. Say so clearly, and offer a way on.
@@ -122,7 +125,8 @@ function CourseDetailsPage() {
             <h2 id="curriculum-title" className="course-section__title">
               Curriculum
             </h2>
-            <Curriculum course={course} />
+            {/* Ticks on the lessons you've done (none if not enrolled) */}
+            <Curriculum course={course} completed={courseProgress(progress, course).completed} />
           </section>
 
           <section id="instructor" className="course-section" aria-labelledby="instructor-title">

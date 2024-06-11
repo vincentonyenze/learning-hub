@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, Navigate, useOutletContext, useParams } from "react-router";
 import EmptyState from "../components/EmptyState.jsx";
+import LessonComplete from "../components/LessonComplete.jsx";
 import { findLesson, getLessons } from "../data/catalog.js";
 import { useProgress } from "../progress/progressContext.js";
 import "./LessonPage.css";
@@ -97,6 +98,11 @@ function LessonPage() {
           ))}
         </ul>
       </section>
+
+      {/* key: each lesson gets a fresh one. Without it React would re-use the
+          same component from lesson to lesson (the route is the same, only
+          :lessonId changes), carrying its message over to the next lesson. */}
+      <LessonComplete key={lesson.id} course={course} lesson={lesson} next={next} />
 
       {/* Its own landmark, so it can be found by name. The direction is in
           the visible text ("Previous", "Next"), not just in an arrow. */}

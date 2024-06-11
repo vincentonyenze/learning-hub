@@ -24,3 +24,7 @@
   font-size: var(--text-sm);
   font-weight: 600;
 }
+
+.enrol__progress {
+  max-width: 24rem;
+}

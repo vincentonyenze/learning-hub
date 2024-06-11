@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import EmptyState from "../../components/EmptyState.jsx";
+import ProgressBar from "../../components/ProgressBar.jsx";
 import { getCourse } from "../../data/catalog.js";
 import { COVER_SIZE, courseCover } from "../../data/media.js";
 import { courseProgress } from "../../progress/progress.js";
@@ -66,10 +67,14 @@ function OverviewPage() {
                   Continue where you left off
                 </h2>
                 <p className="continue__course">{latest.course.title}</p>
-                <p className="continue__meta">
-                  Next up: {latest.status.lastLesson.title} · {latest.status.completedCount} of{" "}
-                  {latest.status.total} lessons done
-                </p>
+                <p className="continue__meta">Next up: {latest.status.lastLesson.title}</p>
+                <div className="continue__progress">
+                  <ProgressBar
+                    done={latest.status.completedCount}
+                    total={latest.status.total}
+                    label={`${latest.course.title} progress`}
+                  />
+                </div>
                 <p>
                   <Link
                     to={`/courses/${latest.course.id}/lessons/${latest.status.lastLesson.id}`}

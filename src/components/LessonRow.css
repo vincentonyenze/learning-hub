@@ -41,3 +41,10 @@
   font-size: var(--text-sm);
   white-space: nowrap;
 }
+
+/* Done: a green tick where the number was (and ", completed" for screen
+   readers, so it's never shown by colour or symbol alone) */
+.lesson-row--done .lesson-row__number {
+  color: var(--color-success);
+  font-weight: 800;
+}

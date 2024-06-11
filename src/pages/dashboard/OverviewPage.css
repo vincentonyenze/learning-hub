@@ -59,6 +59,11 @@
   color: var(--color-muted);
 }
 
+.continue__progress {
+  max-width: 22rem;
+  margin-bottom: 0.6rem;
+}
+
 .overview__more {
   margin-top: 1.25rem;
 }

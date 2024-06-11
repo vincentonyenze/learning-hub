@@ -44,10 +44,8 @@
   text-decoration: underline;
 }
 
-.learn__count {
-  margin: 0.15rem 0 1rem 0.65rem;
-  color: var(--color-muted);
-  font-size: var(--text-sm);
+.learn__progress {
+  margin: 0.6rem 0.25rem 1.1rem 0.65rem;
 }
 
 /* The phone-only toggle */
@@ -70,8 +68,8 @@
     padding: 1rem;
   }
 
-  .learn__count {
-    margin-bottom: 0.75rem;
+  .learn__progress {
+    margin-bottom: 0.85rem;
   }
 
   .learn__toggle {

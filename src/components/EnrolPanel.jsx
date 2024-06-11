@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router";
 import { useAuth } from "../auth/authContext.js";
 import { courseProgress } from "../progress/progress.js";
 import { useProgress } from "../progress/progressContext.js";
+import ProgressBar from "./ProgressBar.jsx";
 import "./EnrolPanel.css";
 
 // The main buttons on a course page. They depend on who's looking:
@@ -64,10 +65,11 @@ function EnrolPanel({ course }) {
       {/* role="status": read out when it appears after pressing Enrol */}
       <p className="enrol__status" role="status">
         <span className="tag tag--primary">{justEnrolled ? "You're enrolled!" : "Enrolled"}</span>
-        <span>
-          {status.completedCount} of {status.total} lessons done
-        </span>
+        {status.isFinished && <span className="tag tag--accent">Completed</span>}
       </p>
+      <div className="enrol__progress">
+        <ProgressBar done={status.completedCount} total={status.total} label={`${course.title} progress`} />
+      </div>
       <p className="enrol__actions">
         <Link to={lessonUrl(status.lastLesson)} className="button button--primary">
           {status.hasStarted ? `Continue: ${status.lastLesson.title}` : "Start the course"}

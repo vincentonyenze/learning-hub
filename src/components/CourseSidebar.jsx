@@ -2,6 +2,8 @@ import { getLessons } from "../data/catalog.js";
 import LessonRow from "./LessonRow.jsx";
 import "./CourseSidebar.css";
 
+const NONE = new Set();
+
 // Every lesson in a course, grouped by module, with the one you're on
 // marked. Reuses LessonRow from the curriculum (Step 11), which was built
 // with isCurrent for exactly this.
@@ -9,7 +11,8 @@ import "./CourseSidebar.css";
 // The module names are labels, not headings: the sidebar comes before the
 // lesson on the page, and headings here would come before the lesson's
 // own h1 in a screen reader's list of headings.
-function CourseSidebar({ course, currentLessonId }) {
+// completed: a Set of finished lesson ids
+function CourseSidebar({ course, currentLessonId, completed = NONE }) {
   const lessonNumber = new Map(getLessons(course).map((lesson, index) => [lesson.id, index + 1]));
 
   return (
@@ -27,6 +30,7 @@ function CourseSidebar({ course, currentLessonId }) {
                   lesson={lesson}
                   number={lessonNumber.get(lesson.id)}
                   isCurrent={lesson.id === currentLessonId}
+                  isDone={completed.has(lesson.id)}
                 />
               </li>
             ))}

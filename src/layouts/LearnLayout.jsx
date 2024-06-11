@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Link, Outlet, useParams } from "react-router";
 import CourseSidebar from "../components/CourseSidebar.jsx";
+import ProgressBar from "../components/ProgressBar.jsx";
 import EmptyState from "../components/EmptyState.jsx";
 import { getCourse, getLessons } from "../data/catalog.js";
+import { courseProgress } from "../progress/progress.js";
+import { useProgress } from "../progress/progressContext.js";
 import "./LearnLayout.css";
 
 // The frame around every lesson of a course: the lesson list beside the
@@ -20,6 +23,7 @@ function LearnLayout() {
   // { courseId: "react-from-scratch", lessonId: "use-state" }
   const { courseId, lessonId } = useParams();
   const course = getCourse(courseId);
+  const { progress } = useProgress();
 
   // Phones only: is the lesson list showing? Labelled with the lesson it
   // was opened on (like the header menu, Step 6), so choosing a lesson
@@ -46,6 +50,8 @@ function LearnLayout() {
     );
   }
 
+  const status = courseProgress(progress, course);
+
   return (
     <div className="learn">
       <aside className="learn__sidebar" aria-labelledby="learn-course-title">
@@ -53,7 +59,14 @@ function LearnLayout() {
         <p id="learn-course-title" className="learn__course-title">
           <Link to={`/courses/${course.id}`}>{course.title}</Link>
         </p>
-        <p className="learn__count">{getLessons(course).length} lessons</p>
+        <div className="learn__progress">
+          <ProgressBar
+            done={status.completedCount}
+            total={getLessons(course).length}
+            label={`${course.title} progress`}
+            size="small"
+          />
+        </div>
 
         {/* Only shown on narrow screens (see the CSS), where the lesson
             list folds away so the lesson itself comes first */}
@@ -70,7 +83,7 @@ function LearnLayout() {
         {/* ONE list for every screen size: wide screens always show it,
             narrow ones only when it's open (data-open, in the CSS) */}
         <div id="lesson-list" className="learn__list" data-open={listOpen}>
-          <CourseSidebar course={course} currentLessonId={lessonId} />
+          <CourseSidebar course={course} currentLessonId={lessonId} completed={status.completed} />
         </div>
       </aside>
 

@@ -11,16 +11,19 @@ const TYPES = {
 // Used in the course curriculum now, and in the lesson sidebar from
 // Step 12. Each place passes what it knows:
 // isCurrent: this is the lesson on screen (the sidebar marks it)
-function LessonRow({ courseId, lesson, number, isCurrent = false }) {
+// isDone: the student has completed it (a tick replaces the number)
+function LessonRow({ courseId, lesson, number, isCurrent = false, isDone = false }) {
   const type = TYPES[lesson.type];
 
   return (
     <Link
       to={`/courses/${courseId}/lessons/${lesson.id}`}
-      className="lesson-row"
+      className={isDone ? "lesson-row lesson-row--done" : "lesson-row"}
       aria-current={isCurrent ? "page" : undefined}
     >
-      <span className="lesson-row__number">{number}</span>
+      <span className="lesson-row__number" aria-hidden={isDone ? "true" : undefined}>
+        {isDone ? "✓" : number}
+      </span>
       <span className="lesson-row__icon" aria-hidden="true">
         {type.icon}
       </span>
@@ -28,7 +31,10 @@ function LessonRow({ courseId, lesson, number, isCurrent = false }) {
         {lesson.title}
         {/* Heard by screen readers, which can't see the icon: "What
             matters most?, Reading, 9 minutes" */}
-        <span className="visually-hidden">, {type.label}</span>
+        <span className="visually-hidden">
+          , {type.label}
+          {isDone ? ", completed" : ""}
+        </span>
       </span>
       <span className="lesson-row__time">
         {lesson.minutes}

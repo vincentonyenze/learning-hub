@@ -4,6 +4,8 @@ import Disclosure from "./Disclosure.jsx";
 import LessonRow from "./LessonRow.jsx";
 import "./Curriculum.css";
 
+const NONE = new Set();
+
 // A course's modules, each opening to show its lessons.
 //
 // COMPOSITION: this component is mostly other components put together.
@@ -11,7 +13,9 @@ import "./Curriculum.css";
 // Disclosure doesn't know about lessons, and LessonRow doesn't know it's
 // inside a Disclosure. Curriculum is the only piece that knows both, so
 // each part stays small and reusable.
-function Curriculum({ course }) {
+// completed: a Set of the student's finished lesson ids (empty if they
+// aren't enrolled or signed in)
+function Curriculum({ course, completed = NONE }) {
   // Which modules are open. The first one starts open, so the page shows
   // some lessons straight away.
   const [openIds, setOpenIds] = useState(() => new Set([course.modules[0].id]));
@@ -76,7 +80,12 @@ function Curriculum({ course }) {
             <ol className="curriculum__lessons">
               {module.lessons.map((lesson) => (
                 <li key={lesson.id}>
-                  <LessonRow courseId={course.id} lesson={lesson} number={lessonNumber.get(lesson.id)} />
+                  <LessonRow
+                    courseId={course.id}
+                    lesson={lesson}
+                    number={lessonNumber.get(lesson.id)}
+                    isDone={completed.has(lesson.id)}
+                  />
                 </li>
               ))}
             </ol>

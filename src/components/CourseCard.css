@@ -118,7 +118,12 @@
   list-style: none;
 }
 
-/* Progress line in a card's footer (dashboard) */
+/* Progress in a card's footer (dashboard) */
+.my-course {
+  display: grid;
+  gap: 0.5rem;
+}
+
 .my-course__status {
   display: flex;
   flex-wrap: wrap;
