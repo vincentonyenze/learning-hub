@@ -8,6 +8,7 @@
 //       completed: ["jsx-and-components"],
 //       lastLessonId: "props",           // where to "Continue"
 //       lastVisitedAt: 1761000500000,
+//       completedAt: null,               // set when the last lesson is done
 //     },
 //     ...
 //   }
@@ -42,9 +43,18 @@ export function progressReducer(state, action) {
     case "lesson_completed": {
       const current = state[action.courseId];
       if (!current || current.completed.includes(action.lessonId)) return state;
+      const completed = [...current.completed, action.lessonId];
+      // That was the last one: remember WHEN the course was finished (kept
+      // if it was already set, so re-ticking doesn't change the date)
+      const allDone = getLessons(getCourse(action.courseId)).every((lesson) => completed.includes(lesson.id));
       return {
         ...state,
-        [action.courseId]: { ...current, completed: [...current.completed, action.lessonId], lastVisitedAt: action.at },
+        [action.courseId]: {
+          ...current,
+          completed,
+          lastVisitedAt: action.at,
+          completedAt: allDone ? (current.completedAt ?? action.at) : null,
+        },
       };
     }
 
@@ -53,7 +63,12 @@ export function progressReducer(state, action) {
       if (!current) return state;
       return {
         ...state,
-        [action.courseId]: { ...current, completed: current.completed.filter((id) => id !== action.lessonId) },
+        // Not every lesson is done any more: the course isn't finished
+        [action.courseId]: {
+          ...current,
+          completed: current.completed.filter((id) => id !== action.lessonId),
+          completedAt: null,
+        },
       };
     }
 
@@ -88,7 +103,13 @@ export function cleanProgress(value) {
       completed: [...new Set(completed)],
       lastLessonId: lessonIds.has(entry.lastLessonId) ? entry.lastLessonId : null,
       lastVisitedAt: Number.isFinite(entry.lastVisitedAt) ? entry.lastVisitedAt : 0,
+      completedAt: null, // worked out below, from the lessons themselves
     };
+    // Only "finished" if every lesson really is done. Keep the saved date
+    // when it's valid, otherwise use the last visit as the best guess.
+    if (lessonIds.size > 0 && clean[courseId].completed.length === lessonIds.size) {
+      clean[courseId].completedAt = Number.isFinite(entry.completedAt) ? entry.completedAt : clean[courseId].lastVisitedAt;
+    }
   }
   return clean;
 }
@@ -107,6 +128,7 @@ export function courseProgress(progress, course) {
     total: lessons.length,
     percent: Math.round((completedCount / lessons.length) * 100),
     isFinished: completedCount === lessons.length,
+    completedAt: entry?.completedAt ?? null,
     // Opened a lesson or finished one: "Continue" rather than "Start"
     hasStarted: completedCount > 0 || Boolean(entry?.lastLessonId),
     // Where "Continue" goes: the last lesson you opened, else the first

@@ -3,6 +3,7 @@ import RequireAuth from "./auth/RequireAuth.jsx";
 import DashboardLayout from "./layouts/DashboardLayout.jsx";
 import LearnLayout from "./layouts/LearnLayout.jsx";
 import RootLayout from "./layouts/RootLayout.jsx";
+import CourseCompletePage from "./pages/CourseCompletePage.jsx";
 import CourseDetailsPage from "./pages/CourseDetailsPage.jsx";
 import MyCoursesPage from "./pages/dashboard/MyCoursesPage.jsx";
 import OverviewPage from "./pages/dashboard/OverviewPage.jsx";
@@ -26,6 +27,7 @@ import SignInPage from "./pages/SignInPage.jsx";
 //         - "lessons"    -> (signed in only) LearnLayout, whose children
 //             - index       -> /lessons alone: redirect to the first lesson
 //             - ":lessonId" -> one lesson, in LearnLayout's <Outlet>
+//         - "complete"   -> (signed in only) the certificate page
 //   - "*"           -> anything else: the 404 page
 //
 // Nesting routes nests layouts: RootLayout > LearnLayout > LessonPage.
@@ -59,6 +61,8 @@ export const router = createBrowserRouter([
                   { path: ":lessonId", element: <LessonPage /> },
                 ],
               },
+              // The certificate page: also signed-in only
+              { path: "complete", element: <CourseCompletePage /> },
             ],
           },
         ],

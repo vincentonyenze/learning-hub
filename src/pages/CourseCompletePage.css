@@ -1,0 +1,108 @@
+.complete {
+  display: grid;
+  gap: 2rem;
+}
+
+.complete__intro {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.complete__intro .page-lead {
+  margin-top: 0;
+}
+
+.complete__icon {
+  font-size: 3rem;
+}
+
+.complete__progress {
+  width: min(22rem, 100%);
+  margin: 0.75rem auto 0;
+  text-align: left;
+}
+
+/* ===== The certificate: a framed, centred card ===== */
+.certificate {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  width: min(44rem, 100%);
+  margin-inline: auto;
+  padding: clamp(1.75rem, 5vw, 3rem) clamp(1.25rem, 5vw, 3rem);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius);
+  /* A second, inner frame */
+  outline: 1px solid var(--color-primary);
+  outline-offset: -10px;
+  background: var(--color-surface);
+  text-align: center;
+}
+
+.certificate__brand {
+  color: var(--color-primary);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.certificate__title {
+  margin-bottom: 0.75rem;
+  font-size: var(--text-xl);
+}
+
+.certificate__text {
+  color: var(--color-muted);
+}
+
+.certificate__name {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.6rem, 5vw, 2.3rem);
+  font-style: italic;
+  font-weight: 700;
+}
+
+.certificate__course {
+  margin-bottom: 1rem;
+  font-size: var(--text-lg);
+  font-weight: 750;
+}
+
+.certificate__details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.certificate__details dt {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.certificate__details dd {
+  margin: 0;
+  font-weight: 650;
+}
+
+.certificate__note {
+  margin-top: 1rem;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
+
+.complete__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.complete__next-title {
+  margin-bottom: 1rem;
+  font-size: var(--text-xl);
+}

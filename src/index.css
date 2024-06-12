@@ -220,6 +220,15 @@ a {
   border-color: var(--color-primary);
 }
 
+.button--danger {
+  background: var(--color-danger);
+  color: var(--color-surface);
+}
+
+.button--danger:hover {
+  filter: brightness(1.1);
+}
+
 .button--ghost {
   background: transparent;
   color: var(--color-text);
@@ -263,5 +272,32 @@ a {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+}
+
+/* ===== Printing =====
+   Pages with a .print-area print ONLY that (the certificate): the header,
+   footer, buttons and suggestions are hidden. White paper, black ink. */
+@media print {
+  body:has(.print-area) .app > :not(main),
+  body:has(.print-area) main > * > :not(.print-area) {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .print-area {
+    border-color: #000 !important;
+    outline-color: #000 !important;
+    background: #fff !important;
+    color: #000 !important;
+    break-inside: avoid;
+  }
+
+  .print-area * {
+    color: #000 !important;
   }
 }

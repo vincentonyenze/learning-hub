@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { courseProgress } from "../progress/progress.js";
 import { useProgress } from "../progress/progressContext.js";
 import "./LessonComplete.css";
@@ -60,6 +60,12 @@ function LessonComplete({ course, lesson, next }) {
           {isDone ? "Completed" : "Mark as complete"}
         </button>
       </div>
+      {status.isFinished && (
+        <p className="lesson-complete__finished">
+          <span aria-hidden="true">🎉</span> You've finished the course!{" "}
+          <Link to={`/courses/${course.id}/complete`}>See your certificate</Link>
+        </p>
+      )}
       {/* Always on the page (empty at first), so screen readers notice
           when its text changes: a status region that's ADDED with its
           text already inside is often not read out */}

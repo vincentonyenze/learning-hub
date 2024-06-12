@@ -28,3 +28,27 @@
 .enrol__progress {
   max-width: 24rem;
 }
+
+.enrol__leave {
+  padding: 0.25rem 0;
+  border: none;
+  background: none;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.enrol__leave:hover {
+  color: var(--color-danger);
+}
+
+.enrol__confirm {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 30rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-small);
+  background: var(--color-danger-soft);
+}

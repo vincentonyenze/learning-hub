@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { useAuth } from "../auth/authContext.js";
 import { courseProgress } from "../progress/progress.js";
@@ -12,11 +12,16 @@ import "./EnrolPanel.css";
 //   enrolled      -> progress so far, and "Continue: <lesson>"
 function EnrolPanel({ course }) {
   const { user } = useAuth();
-  const { progress, enrol } = useProgress();
+  const { progress, enrol, leaveCourse } = useProgress();
   const location = useLocation();
   // Set when you press Enrol, so the confirmation is only announced then,
   // not every time an enrolled student opens the page
   const [justEnrolled, setJustEnrolled] = useState(false);
+  // "Leave course" asks first: leaving deletes your progress in it
+  const [confirmingLeave, setConfirmingLeave] = useState(false);
+  const [justLeft, setJustLeft] = useState(false);
+  const leaveRef = useRef(null);
+  const enrolRef = useRef(null);
 
   const status = courseProgress(progress, course);
   const lessonUrl = (lesson) => `/courses/${course.id}/lessons/${lesson.id}`;
@@ -42,11 +47,13 @@ function EnrolPanel({ course }) {
       <div className="enrol">
         <p className="enrol__actions">
           <button
+            ref={enrolRef}
             type="button"
             className="button button--primary"
             onClick={() => {
               enrol(course.id);
               setJustEnrolled(true);
+              setJustLeft(false);
             }}
           >
             Enrol for free
@@ -55,7 +62,12 @@ function EnrolPanel({ course }) {
             See the lessons
           </a>
         </p>
-        <p className="enrol__note">Learn at your own pace. Your progress is saved as you go.</p>
+        {/* After leaving: confirm it happened (and, being a status, read out) */}
+        <p className="enrol__note" role="status">
+          {justLeft
+            ? `You've left ${course.title}. Your progress in it was deleted.`
+            : "Learn at your own pace. Your progress is saved as you go."}
+        </p>
       </div>
     );
   }
@@ -71,13 +83,67 @@ function EnrolPanel({ course }) {
         <ProgressBar done={status.completedCount} total={status.total} label={`${course.title} progress`} />
       </div>
       <p className="enrol__actions">
-        <Link to={lessonUrl(status.lastLesson)} className="button button--primary">
-          {status.hasStarted ? `Continue: ${status.lastLesson.title}` : "Start the course"}
-        </Link>
+        {status.isFinished ? (
+          <Link to={`/courses/${course.id}/complete`} className="button button--primary">
+            View your certificate
+          </Link>
+        ) : (
+          <Link to={lessonUrl(status.lastLesson)} className="button button--primary">
+            {status.hasStarted ? `Continue: ${status.lastLesson.title}` : "Start the course"}
+          </Link>
+        )}
         <a href="#curriculum" className="button button--secondary">
           See the lessons
         </a>
       </p>
+
+      {confirmingLeave ? (
+        // Asking right here instead of a pop-up: no focus trap, nothing to
+        // dismiss, and the question sits next to the button you pressed
+        <div className="enrol__confirm" role="group" aria-labelledby="leave-question">
+          <p id="leave-question">
+            Leave <strong>{course.title}</strong>? Your progress ({status.completedCount} of {status.total} lessons)
+            will be deleted.
+          </p>
+          <p className="enrol__actions">
+            <button
+              type="button"
+              className="button button--danger"
+              // Focus moves here when the question appears, so keyboard
+              // users can answer straight away
+              autoFocus
+              onClick={() => {
+                leaveCourse(course.id);
+                setConfirmingLeave(false);
+                setJustEnrolled(false);
+                setJustLeft(true);
+                // The Leave button is gone: continue from "Enrol for free",
+                // which appears in its place (after this render)
+                requestAnimationFrame(() => enrolRef.current?.focus());
+              }}
+            >
+              Yes, leave the course
+            </button>
+            <button
+              type="button"
+              className="button button--secondary"
+              onClick={() => {
+                setConfirmingLeave(false);
+                // Back to the button that asked the question
+                requestAnimationFrame(() => leaveRef.current?.focus());
+              }}
+            >
+              Cancel
+            </button>
+          </p>
+        </div>
+      ) : (
+        <p>
+          <button ref={leaveRef} type="button" className="enrol__leave" onClick={() => setConfirmingLeave(true)}>
+            Leave this course
+          </button>
+        </p>
+      )}
     </div>
   );
 }

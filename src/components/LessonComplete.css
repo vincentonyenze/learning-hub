@@ -47,3 +47,10 @@
 .lesson-complete__message:empty {
   display: none;
 }
+
+.lesson-complete__finished {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-small);
+  background: var(--color-accent-soft);
+  font-weight: 650;
+}

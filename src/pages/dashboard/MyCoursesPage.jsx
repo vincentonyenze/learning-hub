@@ -52,10 +52,16 @@ function MyCoursesPage() {
                       />
                       <p className="my-course__status">
                         {status.isFinished ? <span className="tag tag--accent">Completed</span> : <span />}
-                        <Link to={`/courses/${course.id}/lessons/${status.lastLesson.id}`}>
-                          {status.isFinished ? "Review" : status.hasStarted ? "Continue" : "Start"}
-                          <span className="visually-hidden"> {course.title}</span>
-                        </Link>
+                        {status.isFinished ? (
+                          <Link to={`/courses/${course.id}/complete`}>
+                            Certificate<span className="visually-hidden"> for {course.title}</span>
+                          </Link>
+                        ) : (
+                          <Link to={`/courses/${course.id}/lessons/${status.lastLesson.id}`}>
+                            {status.hasStarted ? "Continue" : "Start"}
+                            <span className="visually-hidden"> {course.title}</span>
+                          </Link>
+                        )}
                       </p>
                     </div>
                   }
