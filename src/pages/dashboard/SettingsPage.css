@@ -1,0 +1,63 @@
+.settings {
+  display: grid;
+  gap: 1.35rem;
+  max-width: 36rem;
+  padding: clamp(1.25rem, 4vw, 1.75rem);
+}
+
+.settings__readonly {
+  padding: 0.7rem 0.85rem;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-small);
+  color: var(--color-muted);
+}
+
+.settings__select {
+  cursor: pointer;
+}
+
+/* The whole row is the label: click anywhere on it to tick the box */
+.settings__checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.settings__checkbox input {
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0.2rem 0 0;
+  accent-color: var(--color-primary);
+}
+
+.settings__checkbox .field__hint {
+  display: block;
+  font-weight: 400;
+}
+
+.settings__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.settings__dirty {
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.settings__message {
+  flex-basis: 100%;
+  color: var(--color-success);
+  font-weight: 650;
+}
+
+.settings__message:empty {
+  display: none;
+}

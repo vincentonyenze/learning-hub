@@ -1,4 +1,5 @@
 import { useLocalStorage } from "../hooks/useLocalStorage.js";
+import { BIO_MAX, DAILY_GOALS } from "../utils/validation.js";
 import { AuthContext } from "./authContext.js";
 
 // ⚠ PRETEND sign-in. There's no server, so nothing here is secure: anyone
@@ -14,7 +15,14 @@ function cleanUser(value) {
   if (typeof value?.name !== "string" || typeof value?.email !== "string") {
     throw new Error("Not a user");
   }
-  return { name: value.name.slice(0, 50), email: value.email.slice(0, 254) };
+  return {
+    name: value.name.slice(0, 50),
+    email: value.email.slice(0, 254),
+    // Profile details (Settings), with safe defaults for older saves
+    bio: typeof value.bio === "string" ? value.bio.slice(0, BIO_MAX) : "",
+    dailyGoal: DAILY_GOALS.includes(value.dailyGoal) ? value.dailyGoal : 20,
+    reminders: value.reminders === true,
+  };
 }
 
 // Holds who's signed in, and makes it available to everything inside it
@@ -24,7 +32,17 @@ function AuthProvider({ children }) {
 
   const value = {
     user,
-    signIn: ({ name, email }) => setUser({ name: name.trim(), email: email.trim().toLowerCase() }),
+    signIn: ({ name, email }) =>
+      setUser({ name: name.trim(), email: email.trim().toLowerCase(), bio: "", dailyGoal: 20, reminders: false }),
+    // Change profile details; the email (whose progress this is) stays
+    updateProfile: ({ name, bio, dailyGoal, reminders }) =>
+      setUser((current) => ({
+        ...current,
+        name: name.trim(),
+        bio: bio.trim(),
+        dailyGoal: Number(dailyGoal),
+        reminders,
+      })),
     signOut: () => setUser(null),
   };
 

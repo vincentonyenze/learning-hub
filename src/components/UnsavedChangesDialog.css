@@ -1,0 +1,25 @@
+.unsaved {
+  width: min(28rem, 100% - 2rem);
+  padding: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 0 30px 80px rgb(0 0 0 / 0.35);
+}
+
+.unsaved::backdrop {
+  background: rgb(10 12 16 / 0.6);
+}
+
+.unsaved__title {
+  margin-bottom: 0.5rem;
+  font-size: var(--text-xl);
+}
+
+.unsaved__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}

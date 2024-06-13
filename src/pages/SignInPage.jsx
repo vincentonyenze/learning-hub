@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useAuth } from "../auth/authContext.js";
 import { afterSignInPath } from "../auth/redirect.js";
+import ErrorSummary from "../components/ErrorSummary.jsx";
 import TextField from "../components/TextField.jsx";
 import { validateSignIn } from "../utils/validation.js";
 import "./SignInPage.css";
@@ -72,8 +73,6 @@ function SignInPage() {
     );
   }
 
-  const errorList = Object.entries(errors);
-
   return (
     <div className="sign-in card">
       <h1 className="sign-in__title">Sign in</h1>
@@ -87,31 +86,8 @@ function SignInPage() {
         <p className="sign-in__lead">Sign in to save your progress and pick up where you left off.</p>
       )}
 
-      {/* The error summary: every problem in one place, each a link that
-          jumps to its field. tabIndex -1 lets the code move focus here. */}
-      {errorList.length > 0 && (
-        <div ref={summaryRef} className="error-summary" role="alert" tabIndex={-1} aria-labelledby="error-summary-title">
-          <h2 id="error-summary-title" className="error-summary__title">
-            There {errorList.length === 1 ? "is a problem" : `are ${errorList.length} problems`}
-          </h2>
-          <ul>
-            {errorList.map(([field, message]) => (
-              <li key={field}>
-                <a
-                  href={`#${field}`}
-                  onClick={(event) => {
-                    // The link's job is to put you IN the field
-                    event.preventDefault();
-                    document.querySelector(`[name="${field}"]`)?.focus();
-                  }}
-                >
-                  {FIELD_LABELS[field]}: {message}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {/* Every problem in one place, each a link to its field */}
+      <ErrorSummary ref={summaryRef} errors={errors} labels={FIELD_LABELS} />
 
       {/* noValidate: we show our own, clearer messages instead of the
           browser's pop-up bubbles */}

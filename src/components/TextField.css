@@ -44,3 +44,21 @@
   padding-left: 0.85rem;
   border-left: 3px solid var(--color-danger);
 }
+
+textarea.field__input {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+/* "45 / 200" under a text box */
+.field__count {
+  justify-self: end;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.field__count--over {
+  color: var(--color-danger);
+  font-weight: 700;
+}

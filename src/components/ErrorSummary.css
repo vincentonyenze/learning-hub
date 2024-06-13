@@ -1,0 +1,27 @@
+.error-summary {
+  padding: 1rem 1.15rem;
+  border: 2px solid var(--color-danger);
+  border-radius: var(--radius-small);
+  background: var(--color-danger-soft);
+}
+
+.error-summary:focus {
+  outline: 3px solid var(--color-danger);
+  outline-offset: 2px;
+}
+
+.error-summary__title {
+  margin-bottom: 0.4rem;
+  font-size: var(--text-lg);
+}
+
+.error-summary ul {
+  display: grid;
+  gap: 0.25rem;
+  padding-left: 1.1rem;
+}
+
+.error-summary a {
+  color: var(--color-danger);
+  font-weight: 650;
+}

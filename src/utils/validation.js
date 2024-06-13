@@ -29,3 +29,23 @@ export function validateSignIn({ name, email }) {
   const errors = { name: checkName(name), email: checkEmail(email) };
   return Object.fromEntries(Object.entries(errors).filter(([, message]) => message));
 }
+
+// ===== Profile (Settings page) =====
+
+export const BIO_MAX = 200;
+export const DAILY_GOALS = [10, 20, 30, 60]; // minutes a day
+
+export function checkBio(value) {
+  if (value.trim().length > BIO_MAX) return `Your bio must be ${BIO_MAX} characters or fewer`;
+  return "";
+}
+
+export function checkDailyGoal(value) {
+  return DAILY_GOALS.includes(Number(value)) ? "" : "Choose how many minutes a day";
+}
+
+// All the profile form's errors, only for fields with a problem
+export function validateProfile({ name, bio, dailyGoal }) {
+  const errors = { name: checkName(name), bio: checkBio(bio), dailyGoal: checkDailyGoal(dailyGoal) };
+  return Object.fromEntries(Object.entries(errors).filter(([, message]) => message));
+}

@@ -7,7 +7,10 @@ import "./TextField.css";
 //
 // Everything else (type, value, onChange, autoComplete, ref...) is passed
 // straight through to the <input> with ...inputProps.
-function TextField({ label, hint, error, ...inputProps }) {
+// multiline: a <textarea> instead, for longer text
+// after: extra content under the box (e.g. a character count)
+function TextField({ label, hint, error, multiline = false, after, ...inputProps }) {
+  const Control = multiline ? "textarea" : "input";
   // useId: a unique id per field, so labels and messages connect even if
   // the same form appears twice on a page
   const id = useId();
@@ -32,13 +35,14 @@ function TextField({ label, hint, error, ...inputProps }) {
           {error}
         </p>
       )}
-      <input
+      <Control
         id={id}
         className="field__input"
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy}
         {...inputProps}
       />
+      {after}
     </div>
   );
 }

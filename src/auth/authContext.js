@@ -15,8 +15,9 @@ import { createContext, useContext } from "react";
 // in useAuth below.
 export const AuthContext = createContext(null);
 
-// { user, signIn(user), signOut() }
-//   user: { name, email } when signed in, null when not
+// { user, signIn(user), signOut(), updateProfile(details) }
+//   user: { name, email, bio, dailyGoal, reminders } when signed in,
+//   null when not
 export function useAuth() {
   const auth = useContext(AuthContext);
   if (auth === null) {
