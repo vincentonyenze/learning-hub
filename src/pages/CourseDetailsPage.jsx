@@ -3,6 +3,7 @@ import Breadcrumbs from "../components/Breadcrumbs.jsx";
 import CourseCard from "../components/CourseCard.jsx";
 import Curriculum from "../components/Curriculum.jsx";
 import EnrolPanel from "../components/EnrolPanel.jsx";
+import PageTitle from "../components/PageTitle.jsx";
 import EmptyState from "../components/EmptyState.jsx";
 import {
   courseMinutes,
@@ -57,6 +58,7 @@ function CourseDetailsPage() {
 
   return (
     <>
+      <PageTitle title={course.title} />
       <Breadcrumbs
         items={[
           { label: "Courses", to: "/courses" },

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link, Navigate, useOutletContext, useParams } from "react-router";
 import EmptyState from "../components/EmptyState.jsx";
 import LessonComplete from "../components/LessonComplete.jsx";
+import PageTitle from "../components/PageTitle.jsx";
 import { findLesson, getLessons } from "../data/catalog.js";
 import { useProgress } from "../progress/progressContext.js";
 import "./LessonPage.css";
@@ -56,6 +57,7 @@ function LessonPage() {
 
   return (
     <article className="lesson">
+      <PageTitle title={`${lesson.title} · ${course.title}`} />
       <header className="lesson__header">
         <p className="lesson__module">{lesson.moduleTitle}</p>
         <h1 className="page-title">{lesson.title}</h1>

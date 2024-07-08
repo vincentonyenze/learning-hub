@@ -4,6 +4,7 @@ import { useAuth } from "../auth/authContext.js";
 import { afterSignInPath } from "../auth/redirect.js";
 import ErrorSummary from "../components/ErrorSummary.jsx";
 import TextField from "../components/TextField.jsx";
+import PageTitle from "../components/PageTitle.jsx";
 import { validateSignIn } from "../utils/validation.js";
 import "./SignInPage.css";
 
@@ -60,6 +61,7 @@ function SignInPage() {
   if (user) {
     return (
       <div className="sign-in card">
+        <PageTitle title="Signed in" />
         <h1 className="sign-in__title">You're signed in</h1>
         <p>
           You're signed in as <strong>{user.name}</strong> ({user.email}).
@@ -75,6 +77,7 @@ function SignInPage() {
 
   return (
     <div className="sign-in card">
+      <PageTitle title="Sign in" />
       <h1 className="sign-in__title">Sign in</h1>
       {wasRedirected ? (
         // role="status": announced, so screen reader users know why

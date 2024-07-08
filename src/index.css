@@ -101,6 +101,14 @@ button {
   outline-offset: 2px;
 }
 
+/* Headings and <main> receive focus only from code (page changes, the
+   skip link), to move the reading position. They aren't buttons, so no
+   focus ring: it would look like something to click. */
+h1[tabindex="-1"]:focus,
+main[tabindex="-1"]:focus {
+  outline: none;
+}
+
 body {
   min-height: 100vh;
   font-family: var(--font-body);

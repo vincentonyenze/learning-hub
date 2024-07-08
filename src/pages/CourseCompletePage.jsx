@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router";
 import { useAuth } from "../auth/authContext.js";
 import CourseCard from "../components/CourseCard.jsx";
 import EmptyState from "../components/EmptyState.jsx";
+import PageTitle from "../components/PageTitle.jsx";
 import ProgressBar from "../components/ProgressBar.jsx";
 import { courseMinutes, formatDuration, getCourse, getCourses, getInstructor } from "../data/catalog.js";
 import { courseProgress } from "../progress/progress.js";
@@ -73,6 +74,7 @@ function CourseCompletePage() {
 
   return (
     <div className="complete">
+      <PageTitle title={`Certificate · ${course.title}`} />
       <div className="complete__intro">
         <span className="complete__icon" aria-hidden="true">
           🎉

@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router";
 import CourseCard from "../components/CourseCard.jsx";
 import CourseFilters from "../components/CourseFilters.jsx";
 import EmptyState from "../components/EmptyState.jsx";
+import PageTitle from "../components/PageTitle.jsx";
 import { DEFAULT_FILTERS, filterCourses, getCourses, readFilters, SORT_OPTIONS } from "../data/catalog.js";
 import "./CoursesPage.css";
 
@@ -64,6 +65,9 @@ function CoursesPage() {
 
   return (
     <>
+      {/* Says what's shown: "Design courses" is more useful in a tab
+          than "All courses" when a subject is picked */}
+      <PageTitle title={filters.category ? `${filters.category} courses` : "All courses"} />
       <div className="page-header">
         <h1 className="page-title">All courses</h1>
         <p className="page-lead">

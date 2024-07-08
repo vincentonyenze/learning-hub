@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import CourseCard from "../components/CourseCard.jsx";
+import PageTitle from "../components/PageTitle.jsx";
 import { CATEGORIES } from "../data/courses.js";
 import { getCourses, getFeaturedCourses } from "../data/catalog.js";
 import { heroImage } from "../data/media.js";
@@ -14,6 +15,8 @@ function HomePage() {
 
   return (
     <>
+      {/* The home page: just the site's name */}
+      <PageTitle />
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero__text">
           <h1 id="hero-title" className="page-title">

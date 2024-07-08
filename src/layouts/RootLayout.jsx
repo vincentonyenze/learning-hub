@@ -1,5 +1,6 @@
 import { Outlet, ScrollRestoration } from "react-router";
 import SiteHeader from "../components/SiteHeader.jsx";
+import { useFocusOnNavigation } from "../hooks/useFocusOnNavigation.js";
 
 // The frame around EVERY page: skip link, header, footer. Only the part in
 // <main> changes as you move around the site.
@@ -8,6 +9,9 @@ import SiteHeader from "../components/SiteHeader.jsx";
 // home page, on "/courses" the course list, and so on. The layout itself
 // stays on screen, so the header doesn't flicker or lose its state.
 function RootLayout() {
+  // Every page change moves focus to the new page's heading
+  useFocusOnNavigation();
+
   return (
     <div className="app">
       {/* Keyboard and screen reader users can skip the header on every page */}
@@ -17,8 +21,8 @@ function RootLayout() {
 
       <SiteHeader />
 
-      {/* tabIndex="-1": the skip link (and, in Step 21, page changes) can
-          move focus here, though it isn't something you'd Tab to */}
+      {/* tabIndex="-1": the skip link (and page changes, when a page has
+          no h1) can move focus here, though it isn't something you'd Tab to */}
       <main id="main" className="main container" tabIndex="-1">
         <Outlet />
       </main>

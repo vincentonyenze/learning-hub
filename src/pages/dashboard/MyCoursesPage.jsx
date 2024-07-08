@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import CourseCard from "../../components/CourseCard.jsx";
 import EmptyState from "../../components/EmptyState.jsx";
+import PageTitle from "../../components/PageTitle.jsx";
 import ProgressBar from "../../components/ProgressBar.jsx";
 import { getCourse } from "../../data/catalog.js";
 import { courseProgress } from "../../progress/progress.js";
@@ -19,6 +20,7 @@ function MyCoursesPage() {
 
   return (
     <>
+      <PageTitle title="My courses · My learning" />
       <h1 className="dashboard__title">My courses</h1>
 
       {enrolled.length === 0 ? (

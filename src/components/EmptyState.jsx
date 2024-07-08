@@ -1,3 +1,4 @@
+import PageTitle from "./PageTitle.jsx";
 import "./EmptyState.css";
 
 // A friendly "nothing here" message: no courses match, a page doesn't
@@ -16,6 +17,8 @@ function EmptyState({ icon, title, headingLevel = 2, children, actions }) {
 
   return (
     <div className="empty-state">
+      {/* When it IS the page (a 404, "not found"...), it names the page */}
+      {headingLevel === 1 && <PageTitle title={title} />}
       {icon && (
         <span className="empty-state__icon" aria-hidden="true">
           {icon}

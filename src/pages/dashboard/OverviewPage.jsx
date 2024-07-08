@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import EmptyState from "../../components/EmptyState.jsx";
+import PageTitle from "../../components/PageTitle.jsx";
 import ProgressBar from "../../components/ProgressBar.jsx";
 import { getCourse } from "../../data/catalog.js";
 import { COVER_SIZE, courseCover } from "../../data/media.js";
@@ -28,6 +29,7 @@ function OverviewPage() {
 
   return (
     <>
+      <PageTitle title="Overview · My learning" />
       <h1 className="dashboard__title">Overview</h1>
 
       {enrolled.length === 0 ? (

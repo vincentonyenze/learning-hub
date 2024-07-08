@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useBlocker } from "react-router";
 import { useAuth } from "../../auth/authContext.js";
 import ErrorSummary from "../../components/ErrorSummary.jsx";
+import PageTitle from "../../components/PageTitle.jsx";
 import TextField from "../../components/TextField.jsx";
 import UnsavedChangesDialog from "../../components/UnsavedChangesDialog.jsx";
 import { BIO_MAX, DAILY_GOALS, validateProfile } from "../../utils/validation.js";
@@ -86,6 +87,7 @@ function SettingsPage() {
 
   return (
     <>
+      <PageTitle title="Settings · My learning" />
       <h1 className="dashboard__title">Settings</h1>
 
       <form className="settings card" onSubmit={handleSubmit} noValidate>
