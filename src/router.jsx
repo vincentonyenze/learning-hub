@@ -1,90 +1,106 @@
 import { createBrowserRouter } from "react-router";
 import RequireAuth from "./auth/RequireAuth.jsx";
-import DashboardLayout from "./layouts/DashboardLayout.jsx";
-import LearnLayout from "./layouts/LearnLayout.jsx";
+import LoadingScreen from "./components/LoadingScreen.jsx";
+import { AppError, PageError } from "./components/RouteError.jsx";
 import RootLayout from "./layouts/RootLayout.jsx";
-import CourseCompletePage from "./pages/CourseCompletePage.jsx";
 import CourseDetailsPage from "./pages/CourseDetailsPage.jsx";
-import MyCoursesPage from "./pages/dashboard/MyCoursesPage.jsx";
-import OverviewPage from "./pages/dashboard/OverviewPage.jsx";
-import SettingsPage from "./pages/dashboard/SettingsPage.jsx";
 import CoursesPage from "./pages/CoursesPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
-import LessonPage, { FirstLessonRedirect } from "./pages/LessonPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
-import SignInPage from "./pages/SignInPage.jsx";
+
+// LAZY LOADING (code splitting). The pages above are imported normally:
+// they're in the first download, because nearly everyone sees them. The
+// ones below are only downloaded the first time someone goes there: most
+// visitors never sign in or open the dashboard, so why make them wait for
+// that code?
+//
+// import() (as a function) tells the build tool "put this in its own
+// file", and loads that file when called. React Router calls `lazy` before
+// showing the route, and waits for it.
+//   lazy(() => import("./x.jsx"))            -> the file's default export
+//   lazy(() => import("./x.jsx"), "Named")   -> a named export
+function lazy(load, exportName = "default") {
+  return async () => ({ Component: (await load())[exportName] });
+}
 
 // Every page of the site, as a tree of routes.
 //
-// The root route ("/") renders RootLayout. Its CHILDREN are the pages that
-// appear inside the layout's <Outlet />:
-//   - index: true   -> the page for "/" itself
-//   - "courses"     -> "/courses" (child paths are relative: no leading /)
-//   - "courses/:courseId" -> one course. ":courseId" is a PARAMETER: it
-//                      matches any value, read with useParams(). Its own
-//                      children (NESTED routes):
-//         - index        -> the course page
-//         - "lessons"    -> (signed in only) LearnLayout, whose children
-//             - index       -> /lessons alone: redirect to the first lesson
-//             - ":lessonId" -> one lesson, in LearnLayout's <Outlet>
-//         - "complete"   -> (signed in only) the certificate page
-//   - "*"           -> anything else: the 404 page
+//   /                          RootLayout (header, footer)
+//   ├─ (index)                 Home
+//   ├─ courses                 The catalogue
+//   ├─ courses/:courseId       (groups one course; no page of its own)
+//   │  ├─ (index)              The course page
+//   │  └─ RequireAuth          (signed in only)
+//   │     ├─ lessons           LearnLayout (lesson list)       lazy
+//   │     │  ├─ (index)        -> redirect to the first lesson lazy
+//   │     │  └─ :lessonId      One lesson                       lazy
+//   │     └─ complete          The certificate                  lazy
+//   ├─ sign-in                 Sign in                          lazy
+//   ├─ RequireAuth             (signed in only)
+//   │  └─ dashboard            DashboardLayout                  lazy
+//   │     ├─ (index)           Overview                         lazy
+//   │     ├─ courses           My courses                       lazy
+//   │     └─ settings          Settings                         lazy
+//   └─ *                       Page not found
 //
+// ":courseId" and ":lessonId" are PARAMETERS, read with useParams().
 // Nesting routes nests layouts: RootLayout > LearnLayout > LessonPage.
-//   - "sign-in"     -> the (pretend) sign-in page
-//   - "dashboard"   -> (signed in only) DashboardLayout, with children
-//         - index        -> Overview
-//         - "courses"    -> My courses
-//         - "settings"   -> Settings
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    // If even the layout crashes: a minimal error page of its own
+    ErrorBoundary: AppError,
+    // A first visit straight to a lazy page (a bookmark to /dashboard)
+    // shows this while its code downloads
+    HydrateFallback: LoadingScreen,
     children: [
-      { index: true, element: <HomePage /> },
-      { path: "courses", element: <CoursesPage /> },
       {
-        // No element of its own: it just groups everything under one course
-        path: "courses/:courseId",
+        // A pathless route that only adds an error boundary. A crash in any
+        // page below shows PageError INSIDE RootLayout's <Outlet>, so the
+        // header and its links keep working.
+        ErrorBoundary: PageError,
         children: [
-          { index: true, element: <CourseDetailsPage /> },
+          { index: true, element: <HomePage /> },
+          { path: "courses", element: <CoursesPage /> },
           {
-            // A "layout route" with no path: it adds a check, not a
-            // piece of the address. Everything inside needs sign-in.
+            path: "courses/:courseId",
+            children: [
+              { index: true, element: <CourseDetailsPage /> },
+              {
+                element: <RequireAuth />,
+                children: [
+                  {
+                    path: "lessons",
+                    lazy: lazy(() => import("./layouts/LearnLayout.jsx")),
+                    children: [
+                      { index: true, lazy: lazy(() => import("./pages/LessonPage.jsx"), "FirstLessonRedirect") },
+                      { path: ":lessonId", lazy: lazy(() => import("./pages/LessonPage.jsx")) },
+                    ],
+                  },
+                  { path: "complete", lazy: lazy(() => import("./pages/CourseCompletePage.jsx")) },
+                ],
+              },
+            ],
+          },
+          { path: "sign-in", lazy: lazy(() => import("./pages/SignInPage.jsx")) },
+          {
             element: <RequireAuth />,
             children: [
               {
-                path: "lessons",
-                element: <LearnLayout />,
+                path: "dashboard",
+                lazy: lazy(() => import("./layouts/DashboardLayout.jsx")),
                 children: [
-                  { index: true, element: <FirstLessonRedirect /> },
-                  { path: ":lessonId", element: <LessonPage /> },
+                  { index: true, lazy: lazy(() => import("./pages/dashboard/OverviewPage.jsx")) },
+                  { path: "courses", lazy: lazy(() => import("./pages/dashboard/MyCoursesPage.jsx")) },
+                  { path: "settings", lazy: lazy(() => import("./pages/dashboard/SettingsPage.jsx")) },
                 ],
               },
-              // The certificate page: also signed-in only
-              { path: "complete", element: <CourseCompletePage /> },
             ],
           },
+          { path: "*", element: <NotFoundPage /> },
         ],
       },
-      { path: "sign-in", element: <SignInPage /> },
-      {
-        // The same RequireAuth as the lessons: one line protects a whole
-        // branch of the tree
-        element: <RequireAuth />,
-        children: [
-          {
-            path: "dashboard",
-            element: <DashboardLayout />,
-            children: [
-              { index: true, element: <OverviewPage /> },
-              { path: "courses", element: <MyCoursesPage /> },
-              { path: "settings", element: <SettingsPage /> },
-            ],
-          },
-        ],
-      },
-      { path: "*", element: <NotFoundPage /> },
     ],
   },
 ]);

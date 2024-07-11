@@ -1,0 +1,63 @@
+.route-error {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  max-width: 38rem;
+  margin: clamp(1rem, 6vw, 3rem) auto 0;
+  text-align: center;
+}
+
+.route-error__icon {
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.route-error__title {
+  font-size: var(--text-2xl);
+  line-height: 1.15;
+}
+
+.route-error__text {
+  color: var(--color-muted);
+}
+
+.route-error__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.route-error__details {
+  width: 100%;
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.route-error__details summary {
+  cursor: pointer;
+  color: var(--color-muted);
+}
+
+.route-error__details pre {
+  overflow-x: auto;
+  margin-top: 0.5rem;
+  padding: 0.85rem;
+  border-radius: var(--radius-small);
+  background: var(--color-surface-muted);
+  font-size: 0.8rem;
+}
+
+.route-error__brand {
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+  font-weight: 800;
+}

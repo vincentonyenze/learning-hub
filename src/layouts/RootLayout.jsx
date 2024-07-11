@@ -1,4 +1,5 @@
-import { Outlet, ScrollRestoration } from "react-router";
+import { Outlet, ScrollRestoration, useNavigation } from "react-router";
+import "../components/LoadingScreen.css";
 import SiteHeader from "../components/SiteHeader.jsx";
 import { useFocusOnNavigation } from "../hooks/useFocusOnNavigation.js";
 
@@ -11,6 +12,8 @@ import { useFocusOnNavigation } from "../hooks/useFocusOnNavigation.js";
 function RootLayout() {
   // Every page change moves focus to the new page's heading
   useFocusOnNavigation();
+  // "loading" while the next page's code downloads (a lazy route)
+  const isLoading = useNavigation().state === "loading";
 
   return (
     <div className="app">
@@ -18,6 +21,15 @@ function RootLayout() {
       <a className="skip-link" href="#main">
         Skip to main content
       </a>
+
+      {isLoading && (
+        <>
+          <div className="page-loading" aria-hidden="true" />
+          <p className="visually-hidden" role="status">
+            Loading page…
+          </p>
+        </>
+      )}
 
       <SiteHeader />
 
