@@ -45,7 +45,10 @@ function lazy(load, exportName = "default") {
 //
 // ":courseId" and ":lessonId" are PARAMETERS, read with useParams().
 // Nesting routes nests layouts: RootLayout > LearnLayout > LessonPage.
-export const router = createBrowserRouter([
+//
+// The routes are exported on their own too, so tests can run the very same
+// tree in a MEMORY router (an address held in memory, not the browser's).
+export const routes = [
   {
     path: "/",
     element: <RootLayout />,
@@ -103,4 +106,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+];
+
+// The app's router: the address bar decides the page
+export const router = createBrowserRouter(routes);
